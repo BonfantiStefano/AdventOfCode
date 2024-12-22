@@ -70,13 +70,13 @@ dict[tuple[int, int, tuple[int, int]], None | list[tuple[int, int, tuple[int, in
         for d in [Direction.EAST, Direction.NORTH, Direction.WEST, Direction.SOUTH]
     }
 
-    paths_matrix: dict[tuple[int, int, tuple[int, int]], None | list[tuple[int, int, tuple[int, int]]]] = {
+    previous_matrix: dict[tuple[int, int, tuple[int, int]], None | list[tuple[int, int, tuple[int, int]]]] = {
         (x, y, d): None
         for x in range(width)
         for y in range(height)
         for d in [Direction.EAST, Direction.NORTH, Direction.WEST, Direction.SOUTH]
     }
-    paths_matrix[(1, height - 2, Direction.EAST)] = []
+    previous_matrix[(1, height - 2, Direction.EAST)] = []
 
     to_analyze = [(1, height - 2, Direction.EAST)]
     while len(to_analyze) > 0:
@@ -95,13 +95,13 @@ dict[tuple[int, int, tuple[int, int]], None | list[tuple[int, int, tuple[int, in
                 actual_distance += 1
             if actual_distance < distance_matrix[neighbor]:
                 distance_matrix[neighbor] = actual_distance
-                paths_matrix[neighbor] = [pos]
+                previous_matrix[neighbor] = [pos]
             elif actual_distance == distance_matrix[neighbor]:
-                paths_matrix[neighbor].append(pos)
+                previous_matrix[neighbor].append(pos)
         visited_matrix[pos] = True
         to_analyze.sort(key=lambda n: distance_matrix[n])
 
-    return distance_matrix, paths_matrix
+    return distance_matrix, previous_matrix
 
 
 def get_shortest_path(text: str) -> int:
